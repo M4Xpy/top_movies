@@ -34,3 +34,24 @@ class Genre(models.Model):
 
     def __str__(self):
         return self.genre
+
+
+class Actor(models.Model):
+    name = models.CharField(max_length=63)
+    surname = models.CharField(max_length=63)
+    country = models.ForeignKey(
+        Country,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="actors",
+    )
+
+    class Meta:
+        ordering = ("name", "surname",)
+
+    def get_full_name(self):
+        return f" {self.name} {self.surname} "
+
+    def __str__(self):
+        return f"{self.name} {self.surname}"
