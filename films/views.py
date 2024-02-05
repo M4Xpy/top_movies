@@ -10,7 +10,7 @@ from .forms import (
     ActorForm,
     ActorSearchForm,
     CountryForm,
-    CountrySearchForm, GenreSearchForm,
+    CountrySearchForm, GenreSearchForm, FilmForm,
 )
 from .models import (
     Customer,
@@ -200,3 +200,9 @@ class GenreDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Genre
     template_name = "includes/delete_confirmation.html"
     success_url = reverse_lazy("films:genre-list")
+
+
+class MovieCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Film
+    form_class = FilmForm
+    success_url = reverse_lazy("films:movie-list")

@@ -19,6 +19,8 @@ from .views import (
     GenreListView,
     GenreUpdateView,
     GenreDeleteView,
+
+    MovieCreateView,
 )
 
 urlpatterns = [
@@ -70,6 +72,10 @@ urlpatterns = [
     path("genres/<int:pk>/delete/",
          GenreDeleteView.as_view(),
          name="genre-delete", ),
+    # Movie  CRUD
+    path("movies/create/",
+         MovieCreateView.as_view(),
+         name="movie-create", ),
 
 ]
 

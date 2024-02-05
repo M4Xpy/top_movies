@@ -1,5 +1,8 @@
-from django.contrib.auth.forms import UserCreationForm
+from datetime import datetime
+
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from films.models import Film, Customer, Actor, Genre, Country, Rate, Topic
 
@@ -65,3 +68,15 @@ class GenreSearchForm(forms.Form):
             }
         ),
     )
+
+
+class FilmForm(forms.ModelForm):
+    film_year = forms.IntegerField(
+        validators=[MinValueValidator(1900),
+                    MaxValueValidator(datetime.now().year)],
+        required=False,
+    )
+
+    class Meta:
+        model = Film
+        fields = "__all__"
