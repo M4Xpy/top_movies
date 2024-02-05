@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_filters %}
+{% block title %}<title>Movies</title>
+  <link rel="shortcut icon" type="image/jpg" href="../../static/images/img_7.png"/>{% endblock %}
+{% block content %}
+  <div class="line-gap">
+    <h1>Movies List</h1>
+    <a href="{% url 'films:movie-create' %}" class="btn btn-primary link-to-page">Add new movie</a>
+    <form method="get" action="" class="form-inline  line-gap">
+      {{ search_form|crispy }}
+      <input class="btn btn-secondary" type="submit" value="🔍">
+      <a class="btn btn-info" href="{% url 'films:movie-list' %}">All movies</a>
+    </form>
+  </div>
+  {% if film_list %}
+    <table class="table">
+      <thead class="thead-dark">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Country</th>
+        <th>Year</th>
+        <th>Genre</th>
+        <th>Topics</th>
+        <th>My Rate</th>
+        <th>Rate / Respondents</th>
+        <th>Actors</th>
+        <th>🗨️💬</th>
+        <th>Update</th>
+        <th>Delete</th>
+      </tr>
+      </thead>
+      {% for movie in film_list %}
+        <tr>
+          <td>
+            {{ movie.id }}
+          </td>
+          <td>
+            <a href="{% url 'films:movie-detail' pk=movie.id %}">{{ movie.film_name }}</a>
+          </td>
+          <td>
+            {% for country in movie.country.all %}
+              <a href="?country_id={{ country.id }}">{{ country.name }}</a>
+            {% empty %}
+              <a href="{% url 'films:movie-update' pk=movie.id %}" class="btn btn-primary link-to-page">
+                +</a>
+            {% endfor %}
+          </td>
+          <td>
+            {% if movie.film_year %}
+              <a href="?film_year={{ movie.film_year }}">{{ movie.film_year }}</a>
+            {% else %}
+              <a href="{% url 'films:movie-update' pk=movie.id %}" class="btn btn-primary link-to-page">
+                +</a>
+            {% endif %}
+          </td>
+          <td>
+            {% for genre in movie.genre.all %}
+              <a href="?genre_id={{ genre.id }}">{{ genre.genre }}</a>
+            {% empty %}
+              <a href="{% url 'films:genre-create' %}" class="btn btn-primary link-to-page">
+                +</a>
+            {% endfor %}
+          </td>
+          <td>
+            {% for topic in movie.topics.all %}
+              <a href="?topic_id={{ topic.id }}">{{ topic.name }}</a>
+            {% empty %}
+              <a href="{% url 'films:topic-create' %}" class="btn btn-primary link-to-page">
+                +</a>
+            {% endfor %}
+          </td>
+          <td>
+            {% if movie.personal_rate %}
+              <a href="../movies/{{ movie.id }}/detail/">{{ movie.personal_rate }}</a>
+            {% else %}
+              <a href="../movies/{{ movie.id }}/detail/" class="btn btn-primary link-to-page">+</a>
+            {% endif %}
+          </td>
+          <td>
+            <a href="../movies/{{ movie.id }}/detail/">{{ movie.get_average_rate }}</a>
+          </td>
+          <td>
+            {% for actor in movie.actors.all %}
+              <a href="../movies/?actor_id={{ actor.id }}">{{ actor.get_full_name }}<br></a>
+            {% empty %}
+              <a href="{% url 'films:actor-create' %}" class="btn btn-primary link-to-page">
+                +</a>
+            {% endfor %}
+          </td>
+          <td><a href="../movies/{{ movie.id }}/detail/">{{ movie.film_commentaries.count }}</a></td>
+          <td>
+            <a href="{% url 'films:movie-update' pk=movie.id %}" class="btn btn-primary link-to-page">
+              ↻
+            </a>
+          </td>
+          <td>
+            <a href="{% url 'films:movie-delete' pk=movie.id %}" class="btn btn-danger link-to-page">
+              🗑️
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>There are no movies in the service.</p>
+  {% endif %}
+{% endblock %}

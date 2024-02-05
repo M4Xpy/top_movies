@@ -21,6 +21,7 @@ from .views import (
     GenreDeleteView,
 
     MovieCreateView,
+    MovieListView,
 )
 
 urlpatterns = [
@@ -76,6 +77,9 @@ urlpatterns = [
     path("movies/create/",
          MovieCreateView.as_view(),
          name="movie-create", ),
+    path("movies/",
+         MovieListView.as_view(),
+         name="movie-list", ),
 
 ]
 

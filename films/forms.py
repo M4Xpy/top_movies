@@ -80,3 +80,17 @@ class FilmForm(forms.ModelForm):
     class Meta:
         model = Film
         fields = "__all__"
+
+
+class MovieSearchForm(forms.Form):
+    film_name = forms.CharField(
+        max_length=255,
+        required=False,
+        label="",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Search  movie  by  name",
+                "style": "width: 400px;",
+            }
+        ),
+    )

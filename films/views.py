@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import models
-from django.db.models import Count
+from django.db.models import OuterRef, Subquery, Count
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
@@ -10,7 +10,7 @@ from .forms import (
     ActorForm,
     ActorSearchForm,
     CountryForm,
-    CountrySearchForm, GenreSearchForm, FilmForm,
+    CountrySearchForm, GenreSearchForm, FilmForm, MovieSearchForm,
 )
 from .models import (
     Customer,
@@ -206,3 +206,52 @@ class MovieCreateView(LoginRequiredMixin, generic.CreateView):
     model = Film
     form_class = FilmForm
     success_url = reverse_lazy("films:movie-list")
+
+
+class MovieListView(generic.ListView):
+    model = Film
+    paginate_by = 10
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(MovieListView, self).get_context_data(**kwargs)
+        context["search_form"] = MovieSearchForm(
+            initial={"film_name": self.request.GET.get("film_name", "")}
+        )
+        return context
+
+    def get_queryset(self):
+        rate_queryset = Rate.objects.filter(
+            customer_id=self.request.user.id, film_id=OuterRef("pk")
+        )
+        queryset = Film.objects.prefetch_related(
+            "actors",
+            "country",
+            "genre",
+            "film_rates",
+            "film_commentaries",
+            "topics",
+        )
+        film_name = self.request.GET.get("film_name")
+        country_id = self.request.GET.get("country_id")
+        genre_id = self.request.GET.get("genre_id")
+        actor_id = self.request.GET.get("actor_id")
+        film_year = self.request.GET.get("film_year")
+        topics_id = self.request.GET.get("topic_id")
+
+        if topics_id:
+            queryset = queryset.filter(topics__id=topics_id)
+        if film_year:
+            queryset = queryset.filter(film_year=film_year)
+        if film_name:
+            queryset = queryset.filter(film_name__icontains=film_name)
+        if country_id:
+            queryset = queryset.filter(country__id=country_id)
+        if genre_id:
+            queryset = queryset.filter(genre__id=genre_id)
+        if actor_id:
+            queryset = queryset.filter(actors__id=actor_id)
+        queryset = queryset.annotate(
+            personal_rate=Subquery(rate_queryset.values("rating")[:1])
+        )
+
+        return queryset
