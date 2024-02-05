@@ -12,6 +12,8 @@ from .views import (
 
     CountryCreateView,
     CountryListView,
+    CountryUpdateView,
+    CountryDeleteView,
 )
 
 urlpatterns = [
@@ -44,6 +46,12 @@ urlpatterns = [
     path("countries/",
          CountryListView.as_view(),
          name="country-list", ),
+    path("countries/<int:pk>/update/",
+         CountryUpdateView.as_view(),
+         name="country-update", ),
+    path("countries/<int:pk>/delete/",
+         CountryDeleteView.as_view(),
+         name="country-delete", ),
 
 ]
 

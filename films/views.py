@@ -5,8 +5,13 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
-from .forms import (CustomerCreationForm,
-                    ActorForm, ActorSearchForm, CountryForm, CountrySearchForm)
+from .forms import (
+    CustomerCreationForm,
+    ActorForm,
+    ActorSearchForm,
+    CountryForm,
+    CountrySearchForm,
+)
 from .models import (
     Customer,
     Film,
@@ -136,3 +141,15 @@ class CountryListView(generic.ListView):
             topic_count=Count("films_country__topics", distinct=True),
         )
         return queryset
+
+
+class CountryUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Country
+    form_class = CountryForm
+    success_url = reverse_lazy("films:country-list")
+
+
+class CountryDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Country
+    template_name = "includes/delete_confirmation.html"
+    success_url = reverse_lazy("films:country-list")
