@@ -50,12 +50,20 @@
             {% endif %}
           </td>
           <td>
-            <a href="{% url 'films:genre-create' %}">
-              {{ actor.genre_count }}</a>
+            {% if actor.genre_count %}
+              <a href="{% url 'films:genre-create' %}">
+                {{ actor.genre_count }}</a>
+            {% else %}
+              <a href="{% url 'films:genre-create' %}" class="btn btn-primary link-to-page">+</a>
+            {% endif %}
           </td>
           <td>
-            <a href="{% url 'films:topic-create' %}">
-              {{ actor.topic_count }}</a>
+            {% if actor.topic_count %}
+              <a href="{% url 'films:topic-create' %}">
+                {{ actor.topic_count }}</a>
+            {% else %}
+              <a href="{% url 'films:topic-create' %}" class="btn btn-primary link-to-page">+</a>
+            {% endif %}
           </td>
           <td>
             <a href="{% url 'films:actor-update' pk=actor.id %}" class="btn btn-primary link-to-page">
