@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from .forms import (CustomerCreationForm,
-                    ActorForm, ActorSearchForm, CountryForm)
+                    ActorForm, ActorSearchForm, CountryForm, CountrySearchForm)
 from .models import (
     Customer,
     Film,
@@ -108,3 +108,31 @@ class CountryCreateView(LoginRequiredMixin, generic.CreateView):
     model = Country
     form_class = CountryForm
     success_url = reverse_lazy("films:country-list")
+
+
+class CountryListView(generic.ListView):
+    model = Country
+    paginate_by = 10
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(CountryListView, self).get_context_data(**kwargs)
+        context["search_form"] = CountrySearchForm(
+            initial={"name": self.request.GET.get("name", "")}
+        )
+        return context
+
+    def get_queryset(self):
+        queryset = Country.objects.prefetch_related(
+            "films_country",
+            "actors",
+            "films_country__topics",
+            "films_country__genre",
+        )
+        name = self.request.GET.get("name")
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+        queryset = queryset.annotate(
+            genre_count=Count("films_country__genre", distinct=True),
+            topic_count=Count("films_country__topics", distinct=True),
+        )
+        return queryset

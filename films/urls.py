@@ -11,6 +11,7 @@ from .views import (
     ActorDeleteView,
 
     CountryCreateView,
+    CountryListView,
 )
 
 urlpatterns = [
@@ -40,6 +41,9 @@ urlpatterns = [
     path("countries/create/",
          CountryCreateView.as_view(),
          name="country-create", ),
+    path("countries/",
+         CountryListView.as_view(),
+         name="country-list", ),
 
 ]
 

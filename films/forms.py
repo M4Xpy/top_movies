@@ -37,3 +37,17 @@ class CountryForm(forms.ModelForm):
     class Meta:
         model = Country
         fields = ("name",)
+
+
+class CountrySearchForm(forms.Form):
+    name = forms.CharField(
+        max_length=63,
+        required=False,
+        label="",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Search  country  by  name",
+                "style": "width: 400px;",
+            }
+        ),
+    )

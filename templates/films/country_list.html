@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_filters %}
+{% block title %}<title>Countries</title>
+  <link rel="shortcut icon" type="image/jpg" href="../../static/images/img_7.png"/>{% endblock %}
+{% block content %}
+  <div class="line-gap">
+    <h1>Countries List</h1>
+    <a href="{% url 'films:country-create' %}" class="btn btn-primary link-to-page">Add Country</a>
+    <form method="get" action="" class="form-inline  line-gap">
+      {{ search_form|crispy }}
+      <input class="btn btn-secondary" type="submit" value="🔍">
+      <a class="btn btn-info" href="{% url 'films:country-list' %}">All countries</a>
+    </form>
+  </div>
+  {% if country_list %}
+    <table class="table">
+      <thead class="thead-dark">
+      <tr>
+        <th>ID</th>
+        <th>Country</th>
+        <th>Movies</th>
+        <th>Genres</th>
+        <th>Topics</th>
+        <th>Actors</th>
+        <th>Update</th>
+        <th>Delete</th>
+      </tr>
+      </thead>
+      {% for country in country_list %}
+        <tr>
+          <td>
+            {{ country.id }}
+          </td>
+          <td>
+            <a href="../movies/?country_id={{ country.id }}">{{ country.name }}</a>
+          </td>
+          <td>
+            {% if country.films_country.count %}
+              <a href="../movies/?country_id={{ country.id }}">{{ country.films_country.count }}</a>
+            {% else %}
+              <a href="{% url 'films:movie-create' %}" class="btn btn-primary link-to-page">+</a>
+            {% endif %}
+          </td>
+          <td>
+            {% if country.genre_count %}
+              <a href="../genres/?country_id={{ country.id }}">{{ country.genre_count }}</a>
+            {% else %}
+              <a href="{% url 'films:genre-create' %}" class="btn btn-primary link-to-page">+</a>
+            {% endif %}
+          </td>
+          <td>
+            {% if country.topic_count %}
+              <a href="../topics/?country_id={{ country.id }}">{{ country.topic_count }}</a>
+            {% else %}
+              <a href="{% url 'films:topic-create' %}" class="btn btn-primary link-to-page">+</a>
+            {% endif %}
+          </td>
+          <td>
+            {% if country.actors.count %}
+              <a href="../actors/?country_id={{ country.id }}">{{ country.actors.count }}</a>
+            {% else %}
+              <a href="{% url 'films:actor-create' %}" class="btn btn-primary link-to-page">+</a>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'films:country-update' pk=country.id %}" class="btn btn-primary link-to-page">
+              Update
+            </a>
+          </td>
+          <td>
+            <a href="{% url 'films:country-delete' pk=country.id %}" class="btn btn-danger link-to-page">
+              Delete
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>There are no countries in the service.</p>
+  {% endif %}
+{% endblock %}
