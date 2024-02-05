@@ -31,3 +31,9 @@ class ActorSearchForm(forms.Form):
             }
         ),
     )
+
+
+class CountryForm(forms.ModelForm):
+    class Meta:
+        model = Country
+        fields = ("name",)

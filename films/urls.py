@@ -9,6 +9,8 @@ from .views import (
     ActorListView,
     ActorUpdateView,
     ActorDeleteView,
+
+    CountryCreateView,
 )
 
 urlpatterns = [
@@ -34,6 +36,10 @@ urlpatterns = [
     path("actors/<int:pk>/delete/",
          ActorDeleteView.as_view(),
          name="actor-delete", ),
+    # Country  CRUD
+    path("countries/create/",
+         CountryCreateView.as_view(),
+         name="country-create", ),
 
 ]
 

@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from .forms import (CustomerCreationForm,
-                    ActorForm, ActorSearchForm)
+                    ActorForm, ActorSearchForm, CountryForm)
 from .models import (
     Customer,
     Film,
@@ -102,3 +102,9 @@ class ActorDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Actor
     template_name = "includes/delete_confirmation.html"
     success_url = reverse_lazy("films:actor-list")
+
+
+class CountryCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Country
+    form_class = CountryForm
+    success_url = reverse_lazy("films:country-list")
