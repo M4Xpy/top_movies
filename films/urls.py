@@ -14,6 +14,8 @@ from .views import (
     CountryListView,
     CountryUpdateView,
     CountryDeleteView,
+
+    GenreCreateView,
 )
 
 urlpatterns = [
@@ -52,6 +54,10 @@ urlpatterns = [
     path("countries/<int:pk>/delete/",
          CountryDeleteView.as_view(),
          name="country-delete", ),
+    # Genre  CRUD
+    path("genres/create/",
+         GenreCreateView.as_view(),
+         name="genre-create", ),
 
 ]
 

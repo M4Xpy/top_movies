@@ -153,3 +153,9 @@ class CountryDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Country
     template_name = "includes/delete_confirmation.html"
     success_url = reverse_lazy("films:country-list")
+
+
+class GenreCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Genre
+    fields = "__all__"
+    success_url = reverse_lazy("films:genre-list")
