@@ -114,3 +114,14 @@ class Rate(models.Model):
 
     def __str__(self):
         return f"{self.rating}"
+
+
+class Commentary(models.Model):
+    owner = models.ForeignKey(Customer,
+                              on_delete=models.CASCADE,
+                              related_name="customer_commentaries")
+    movie = models.ForeignKey(Film,
+                              on_delete=models.CASCADE,
+                              related_name="film_commentaries")
+    created_time = models.DateTimeField(auto_now_add=True)
+    content = models.TextField()
