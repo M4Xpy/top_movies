@@ -27,3 +27,10 @@ class Topic(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Genre(models.Model):
+    genre = models.CharField(max_length=63, unique=True)
+
+    def __str__(self):
+        return self.genre
