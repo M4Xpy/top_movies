@@ -94,3 +94,17 @@ class MovieSearchForm(forms.Form):
             }
         ),
     )
+
+
+class TopicSearchForm(forms.Form):
+    topic = forms.CharField(
+        max_length=63,
+        required=False,
+        label="",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Search  actor  by  topic",
+                "style": "width: 400px;",
+            }
+        ),
+    )

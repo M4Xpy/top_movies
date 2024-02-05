@@ -12,7 +12,7 @@ from .forms import (
     ActorForm,
     ActorSearchForm,
     CountryForm,
-    CountrySearchForm, GenreSearchForm, FilmForm, MovieSearchForm,
+    CountrySearchForm, GenreSearchForm, FilmForm, MovieSearchForm, TopicSearchForm,
 )
 from .models import (
     Customer,
@@ -309,3 +309,29 @@ class TopicCreateView(LoginRequiredMixin, generic.CreateView):
     model = Topic
     fields = "__all__"
     success_url = reverse_lazy("films:topic-list")
+
+
+class TopicListView(generic.ListView):
+    model = Topic
+    paginate_by = 10
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(TopicListView, self).get_context_data(**kwargs)
+        context["search_form"] = TopicSearchForm(
+            initial={"topic": self.request.GET.get("topic", "")}
+        )
+
+        return context
+
+    def get_queryset(self):
+        queryset = Topic.objects.prefetch_related(
+            "films_topics__actors",
+        )
+        topic = self.request.GET.get("topic")
+        if topic:
+            return queryset.filter(name__icontains=topic)
+        queryset = queryset.annotate(
+            genre_count=Count("films_topics__genre", distinct=True),
+            actor_count=Count("films_topics__actors", distinct=True),
+        )
+        return queryset

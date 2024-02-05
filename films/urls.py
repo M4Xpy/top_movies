@@ -29,6 +29,7 @@ from .views import (
     commentary_film,
 
     TopicCreateView,
+    TopicListView,
 )
 
 urlpatterns = [
@@ -105,6 +106,9 @@ urlpatterns = [
     path("topics/create/",
          TopicCreateView.as_view(),
          name="topic-create", ),
+    path("topics/",
+         TopicListView.as_view(),
+         name="topic-list", ),
 ]
 
 app_name = "films"

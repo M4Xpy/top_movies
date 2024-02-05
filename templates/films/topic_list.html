@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_filters %}
+{% block title %}<title>Topics</title>
+  <link rel="shortcut icon" type="image/jpg" href="../../static/images/img_7.png"/>{% endblock %}
+{% block content %}
+  <div class="line-gap">
+    <h1>Topics List</h1>
+    <a href="{% url 'films:topic-create' %}" class="btn btn-primary link-to-page">Add Topic</a>
+    <form method="get" action="" class="form-inline  line-gap">
+      {{ search_form|crispy }}
+      <input class="btn btn-secondary" type="submit" value="🔍">
+      <a class="btn btn-info" href="{% url 'films:topic-list' %}">All topics</a>
+    </form>
+  </div>
+  {% if topic_list %}
+    <table class="table">
+      <thead class="thead-dark">
+      <tr>
+        <th>ID</th>
+        <th>Topic</th>
+        <th>Movies</th>
+        <th>Genres</th>
+        <th>Actors</th>
+        <th>Update</th>
+        <th>Delete</th>
+      </tr>
+      </thead>
+      {% for topic in topic_list %}
+        <tr>
+          <td>
+            {{ topic.id }}
+          </td>
+          <td>
+            <a href="../movies/?topic_id={{ topic.id }}">{{ topic.name }}</a>
+          </td>
+          <td>
+            {% if topic.films_topics.count %}
+              <a href="../movies/?topic_id={{ topic.id }}">{{ topic.films_topics.count }}</a>
+            {% else %}
+              <a href="{% url 'films:movie-create' %}" class="btn btn-primary link-to-page">Add Movie</a>
+            {% endif %}
+          </td>
+          <td>
+            {% if topic.genre_count %}
+              <a href="../movies/?topic_id={{ topic.id }}">{{ topic.genre_count }}</a>
+            {% else %}
+              <a href="{% url 'films:genre-create' %}" class="btn btn-primary link-to-page">Add Genre</a>
+            {% endif %}
+          </td>
+          <td>
+            {% if topic.actor_count %}
+              <a href="../movies/?topic_id={{ topic.id }}&actor_id={{ actor.id }}">{{ topic.actor_count }}</a>
+            {% else %}
+              <a href="{% url 'films:actor-create' %}" class="btn btn-primary link-to-page">Add Actor</a>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'films:topic-update' pk=topic.id %}" class="btn btn-primary link-to-page">
+              Update
+            </a>
+          </td>
+          <td>
+            <a href="{% url 'films:topic-delete' pk=topic.id %}" class="btn btn-danger link-to-page">
+              Delete
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>There are no topics in the service.</p>
+  {% endif %}
+{% endblock %}
