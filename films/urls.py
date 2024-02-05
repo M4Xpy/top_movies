@@ -22,6 +22,7 @@ from .views import (
 
     MovieCreateView,
     MovieListView,
+    MovieDetailView,
 )
 
 urlpatterns = [
@@ -80,6 +81,9 @@ urlpatterns = [
     path("movies/",
          MovieListView.as_view(),
          name="movie-list", ),
+    path("movies/<int:pk>/detail/",
+         MovieDetailView.as_view(),
+         name="movie-detail", ),
 
 ]
 

@@ -255,3 +255,7 @@ class MovieListView(generic.ListView):
         )
 
         return queryset
+
+
+class MovieDetailView(generic.DetailView):
+    model = Film
