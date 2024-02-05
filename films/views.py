@@ -90,3 +90,15 @@ class ActorListView(generic.ListView):
         )
 
         return queryset
+
+
+class ActorUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Actor
+    form_class = ActorForm
+    success_url = reverse_lazy("films:actor-list")
+
+
+class ActorDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Actor
+    template_name = "includes/delete_confirmation.html"
+    success_url = reverse_lazy("films:actor-list")

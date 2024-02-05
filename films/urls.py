@@ -7,6 +7,8 @@ from .views import (
 
     ActorCreateView,
     ActorListView,
+    ActorUpdateView,
+    ActorDeleteView,
 )
 
 urlpatterns = [
@@ -26,6 +28,12 @@ urlpatterns = [
     path("actors/",
          ActorListView.as_view(),
          name="actor-list", ),
+    path("actors/<int:pk>/update/",
+         ActorUpdateView.as_view(),
+         name="actor-update", ),
+    path("actors/<int:pk>/delete/",
+         ActorDeleteView.as_view(),
+         name="actor-delete", ),
 
 ]
 
