@@ -289,3 +289,17 @@ def rate_film(request, film_id):
 
     return HttpResponseRedirect(reverse_lazy("films:movie-detail",
                                              args=[film_id]))
+
+
+@login_required
+def commentary_film(request, film_id):
+    text = request.POST.get("commentary")
+    if text:
+        Commentary.objects.create(
+            owner=get_object_or_404(Customer, id=request.user.id),
+            movie=get_object_or_404(Film, id=film_id),
+            content=text,
+        )
+
+    return HttpResponseRedirect(reverse_lazy("films:movie-detail",
+                                             args=[film_id]))

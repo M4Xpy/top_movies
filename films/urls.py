@@ -26,6 +26,7 @@ from .views import (
     MovieUpdateView,
     MovieDeleteView,
     rate_film,
+    commentary_film,
 )
 
 urlpatterns = [
@@ -95,7 +96,9 @@ urlpatterns = [
          name="movie-delete", ),
     path("rate-film/<int:film_id>/",
          rate_film, name="rate-film"),
-
+    path("commentary-film/<int:film_id>/",
+         commentary_film,
+         name="commentary-film", ),
 ]
 
 app_name = "films"
