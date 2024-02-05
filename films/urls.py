@@ -27,6 +27,8 @@ from .views import (
     MovieDeleteView,
     rate_film,
     commentary_film,
+
+    TopicCreateView,
 )
 
 urlpatterns = [
@@ -99,6 +101,10 @@ urlpatterns = [
     path("commentary-film/<int:film_id>/",
          commentary_film,
          name="commentary-film", ),
+    # Topic  CRUD
+    path("topics/create/",
+         TopicCreateView.as_view(),
+         name="topic-create", ),
 ]
 
 app_name = "films"

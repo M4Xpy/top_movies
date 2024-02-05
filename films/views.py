@@ -303,3 +303,9 @@ def commentary_film(request, film_id):
 
     return HttpResponseRedirect(reverse_lazy("films:movie-detail",
                                              args=[film_id]))
+
+
+class TopicCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Topic
+    fields = "__all__"
+    success_url = reverse_lazy("films:topic-list")
