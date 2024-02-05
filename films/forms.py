@@ -17,3 +17,17 @@ class ActorForm(forms.ModelForm):
     class Meta:
         model = Actor
         fields = ("name", "surname", "country")
+
+
+class ActorSearchForm(forms.Form):
+    full_name = forms.CharField(
+        max_length=99,
+        required=False,
+        label="",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Search  actor  by  name  or(and)  surname",
+                "style": "width: 400px;",
+            }
+        ),
+    )

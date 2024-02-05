@@ -6,6 +6,7 @@ from .views import (
     CustomerDeleteView,
 
     ActorCreateView,
+    ActorListView,
 )
 
 urlpatterns = [
@@ -22,6 +23,9 @@ urlpatterns = [
     path("actors/create/",
          ActorCreateView.as_view(),
          name="actor-create", ),
+    path("actors/",
+         ActorListView.as_view(),
+         name="actor-list", ),
 
 ]
 

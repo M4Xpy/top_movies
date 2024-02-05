@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_filters %}
+{% block title %}<title>Actors</title>
+  <link rel="shortcut icon" type="image/jpg" href="../../static/images/img_7.png"/>{% endblock %}
+{% block content %}
+  <div class="line-gap">
+    <h1>Actors List</h1>
+    <a href="{% url 'films:actor-create' %}" class="btn btn-primary link-to-page">Create Actor</a>
+    <form method="get" action="" class="form-inline  line-gap">
+      {{ search_form|crispy }}
+      <input class="btn btn-secondary" type="submit" value="🔍">
+      <a class="btn btn-info" href="{% url 'films:actor-list' %}">All actors</a>
+    </form>
+  </div>
+  {% if actor_list %}
+    <table class="table">
+      <thead class="thead-dark">
+      <tr>
+        <th>ID</th>
+        <th>Full Name</th>
+        <th>Country</th>
+        <th>Movies</th>
+        <th>Genres</th>
+        <th>Topics</th>
+        <th>Update</th>
+        <th>Delete</th>
+      </tr>
+      </thead>
+      {% for actor in actor_list %}
+        <tr>
+          <td>
+            {{ actor.id }}
+          </td>
+          <td>
+            <a href="../movies/?actor_id={{ actor.id }}">{{ actor.get_full_name }}</a>
+          </td>
+          <td>
+            {% if actor.country %}
+              <a href="../actors/?country_id={{ actor.country.id }}">{{ actor.country }}</a>
+            {% else %}
+              <a href="{% url 'films:country-create' %}" class="btn btn-primary link-to-page">+</a>
+            {% endif %}
+          </td>
+          <td>
+            {% if actor.films_actors.count %}
+              <a href="../movies/?actor_id={{ actor.id }}">{{ actor.films_actors.count }}</a>
+            {% else %}
+              <a href="{% url 'films:movie-create' %}" class="btn btn-primary link-to-page">+</a>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'films:genre-create' %}">
+              {{ actor.genre_count }}</a>
+          </td>
+          <td>
+            <a href="{% url 'films:topic-create' %}">
+              {{ actor.topic_count }}</a>
+          </td>
+          <td>
+            <a href="{% url 'films:actor-update' pk=actor.id %}" class="btn btn-primary link-to-page">
+              Update
+            </a>
+          </td>
+          <td>
+            <a href="{% url 'films:actor-delete' pk=actor.id %}" class="btn btn-danger link-to-page">
+              Delete
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>There are no actors in the service.</p>
+  {% endif %}
+{% endblock %}

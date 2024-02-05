@@ -1,10 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import models
+from django.db.models import Count
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
 from .forms import (CustomerCreationForm,
-                    ActorForm)
+                    ActorForm, ActorSearchForm)
 from .models import (
     Customer,
     Film,
@@ -53,3 +55,38 @@ class ActorCreateView(LoginRequiredMixin, generic.CreateView):
     model = Actor
     form_class = ActorForm
     success_url = reverse_lazy("films:actor-list")
+
+
+class ActorListView(generic.ListView):
+    model = Actor
+    paginate_by = 10
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ActorListView, self).get_context_data(**kwargs)
+        context["search_form"] = ActorSearchForm(
+            initial={"full_name": self.request.GET.get("full_name", "")}
+        )
+
+        return context
+
+    def get_queryset(self):
+        queryset = Actor.objects.select_related("country").prefetch_related(
+            "films_actors__genre",
+        )
+
+        full_name = self.request.GET.get("full_name")
+        country_id = self.request.GET.get("country_id")
+        if full_name:
+            return queryset.filter(
+                models.Q(name__icontains=full_name)
+                | models.Q(surname__icontains=full_name)
+            )
+        if country_id:
+            return queryset.filter(country__id=country_id)
+
+        queryset = queryset.annotate(
+            genre_count=Count("films_actors__genre", distinct=True),
+            topic_count=Count("films_actors__topics", distinct=True),
+        )
+
+        return queryset
