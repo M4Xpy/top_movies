@@ -99,3 +99,18 @@ class Film(models.Model):
 
     def __str__(self):
         return f"({self.film_year}) {self.film_name}"
+
+
+class Rate(models.Model):
+    customer = models.ForeignKey(Customer,
+                                 on_delete=models.CASCADE,
+                                 related_name="film_rates",
+                                 )
+    rating = models.IntegerField(default=0)
+    film = models.ForeignKey(Film,
+                             on_delete=models.CASCADE,
+                             related_name="film_rates",
+                             )
+
+    def __str__(self):
+        return f"{self.rating}"
