@@ -3,7 +3,8 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
-from .forms import CustomerCreationForm
+from .forms import (CustomerCreationForm,
+                    ActorForm)
 from .models import (
     Customer,
     Film,
@@ -46,3 +47,9 @@ class CustomerCreateView(LoginRequiredMixin, generic.CreateView):
 class CustomerDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Customer
     success_url = reverse_lazy("")
+
+
+class ActorCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Actor
+    form_class = ActorForm
+    success_url = reverse_lazy("films:actor-list")

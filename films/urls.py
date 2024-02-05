@@ -4,6 +4,8 @@ from .views import (
     index,
     CustomerCreateView,
     CustomerDeleteView,
+
+    ActorCreateView,
 )
 
 urlpatterns = [
@@ -16,6 +18,10 @@ urlpatterns = [
     path("customers/<int:pk>/delete/",
          CustomerDeleteView.as_view(),
          name="customer-delete", ),
+    # Actor  CRUD
+    path("actors/create/",
+         ActorCreateView.as_view(),
+         name="actor-create", ),
 
 ]
 
