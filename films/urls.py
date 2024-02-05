@@ -30,6 +30,8 @@ from .views import (
 
     TopicCreateView,
     TopicListView,
+    TopicUpdateView,
+    TopicDeleteView,
 )
 
 urlpatterns = [
@@ -109,6 +111,12 @@ urlpatterns = [
     path("topics/",
          TopicListView.as_view(),
          name="topic-list", ),
+    path("topics/<int:pk>/update/",
+         TopicUpdateView.as_view(),
+         name="topic-update", ),
+    path("topics/<int:pk>/delete/",
+         TopicDeleteView.as_view(),
+         name="topic-delete", ),
 ]
 
 app_name = "films"

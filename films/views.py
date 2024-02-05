@@ -335,3 +335,15 @@ class TopicListView(generic.ListView):
             actor_count=Count("films_topics__actors", distinct=True),
         )
         return queryset
+
+
+class TopicUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Topic
+    fields = "__all__"
+    success_url = reverse_lazy("films:topic-list")
+
+
+class TopicDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Topic
+    template_name = "includes/delete_confirmation.html"
+    success_url = reverse_lazy("films:topic-list")
