@@ -1,7 +1,9 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import models
 from django.db.models import OuterRef, Subquery, Count
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views import generic
 
@@ -270,3 +272,20 @@ class MovieUpdateView(LoginRequiredMixin, generic.UpdateView):
 class MovieDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Film
     success_url = reverse_lazy("films:movie-list")
+
+
+@login_required
+def rate_film(request, film_id):
+    film = get_object_or_404(Film, id=film_id)
+    customer = get_object_or_404(Customer, id=request.user.id)
+    new_rating = int(request.POST.get("rating"))
+    existing_rate = Rate.objects.filter(customer=customer, film=film).first()
+
+    if existing_rate:
+        existing_rate.rating = new_rating
+        existing_rate.save()
+    else:
+        Rate.objects.create(customer=customer, rating=new_rating, film=film)
+
+    return HttpResponseRedirect(reverse_lazy("films:movie-detail",
+                                             args=[film_id]))
