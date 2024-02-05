@@ -188,3 +188,15 @@ class GenreListView(generic.ListView):
             actor_count=Count("films_genre__actors", distinct=True),
         )
         return queryset
+
+
+class GenreUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Genre
+    fields = "__all__"
+    success_url = reverse_lazy("films:genre-list")
+
+
+class GenreDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Genre
+    template_name = "includes/delete_confirmation.html"
+    success_url = reverse_lazy("films:genre-list")
