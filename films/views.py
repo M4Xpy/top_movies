@@ -10,7 +10,7 @@ from .forms import (
     ActorForm,
     ActorSearchForm,
     CountryForm,
-    CountrySearchForm,
+    CountrySearchForm, GenreSearchForm,
 )
 from .models import (
     Customer,
@@ -159,3 +159,32 @@ class GenreCreateView(LoginRequiredMixin, generic.CreateView):
     model = Genre
     fields = "__all__"
     success_url = reverse_lazy("films:genre-list")
+
+
+class GenreListView(generic.ListView):
+    model = Genre
+    paginate_by = 10
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(GenreListView, self).get_context_data(**kwargs)
+        context["search_form"] = GenreSearchForm(
+            initial={"genre": self.request.GET.get("genre", "")}
+        )
+
+        return context
+
+    def get_queryset(self):
+        queryset = Genre.objects.prefetch_related(
+            "films_genre__actors",
+        )
+        genre = self.request.GET.get("genre")
+        country_id = self.request.GET.get("country_id")
+        if genre:
+            queryset = queryset.filter(genre__icontains=genre)
+        if country_id:
+            queryset = queryset.filter(films_genre__country__id=country_id)
+        queryset = queryset.annotate(
+            topic_count=Count("films_genre__topics", distinct=True),
+            actor_count=Count("films_genre__actors", distinct=True),
+        )
+        return queryset

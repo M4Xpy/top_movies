@@ -51,3 +51,17 @@ class CountrySearchForm(forms.Form):
             }
         ),
     )
+
+
+class GenreSearchForm(forms.Form):
+    genre = forms.CharField(
+        max_length=63,
+        required=False,
+        label="",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Search  actor  by  genre",
+                "style": "width: 400px;",
+            }
+        ),
+    )
