@@ -259,3 +259,14 @@ class MovieListView(generic.ListView):
 
 class MovieDetailView(generic.DetailView):
     model = Film
+
+
+class MovieUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Film
+    form_class = FilmForm
+    success_url = reverse_lazy("films:movie-list")
+
+
+class MovieDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Film
+    success_url = reverse_lazy("films:movie-list")
