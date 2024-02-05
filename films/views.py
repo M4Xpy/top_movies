@@ -1,5 +1,9 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views import generic
 
+from .forms import CustomerCreationForm
 from .models import (
     Customer,
     Film,
@@ -32,3 +36,13 @@ def index(request):
     }
 
     return render(request, "films/index.html", context=context)
+
+
+class CustomerCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Customer
+    form_class = CustomerCreationForm
+
+
+class CustomerDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Customer
+    success_url = reverse_lazy("")
