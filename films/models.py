@@ -55,3 +55,47 @@ class Actor(models.Model):
 
     def __str__(self):
         return f"{self.name} {self.surname}"
+
+
+class Film(models.Model):
+    film_year = models.IntegerField(
+        blank=True,
+        null=True,
+    )
+    film_name = models.CharField(
+        max_length=63,
+    )
+    country = models.ManyToManyField(
+        Country,
+        blank=True,
+        related_name="films_country",
+    )
+    genre = models.ManyToManyField(
+        Genre,
+        blank=True,
+        related_name="films_genre",
+    )
+    actors = models.ManyToManyField(
+        Actor,
+        blank=True,
+        related_name="films_actors",
+    )
+    topics = models.ManyToManyField(
+        Topic,
+        blank=True,
+        related_name="films_topics"
+    )
+
+    class Meta:
+        ordering = ("film_name", "film_year",)
+
+    def get_average_rate(self):
+        rates = self.film_rates.all()
+        len_rates = len(rates)
+        if rates:
+            return f"{round(sum(rate.rating for rate in rates) / len_rates,
+                            2)} / {len_rates}"
+        return 0.0
+
+    def __str__(self):
+        return f"({self.film_year}) {self.film_name}"
