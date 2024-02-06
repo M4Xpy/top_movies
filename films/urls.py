@@ -25,7 +25,7 @@ from .views import (
     MovieDetailView,
     MovieUpdateView,
     MovieDeleteView,
-    rate_film,
+    RateCreateView,
     CommentaryCreateView,
 
     TopicCreateView,
@@ -100,7 +100,8 @@ urlpatterns = [
          MovieDeleteView.as_view(),
          name="movie-delete", ),
     path("rate-film/<int:film_id>/",
-         rate_film, name="rate-film"),
+         RateCreateView.as_view(),
+         name="rate-film"),
     path("commentary-film/<int:film_id>/",
          CommentaryCreateView.as_view(),
          name="commentary-film", ),

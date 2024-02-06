@@ -1,4 +1,3 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import models
 from django.db.models import OuterRef, Subquery, Count
@@ -12,7 +11,11 @@ from .forms import (
     ActorForm,
     ActorSearchForm,
     CountryForm,
-    CountrySearchForm, GenreSearchForm, FilmForm, MovieSearchForm, TopicSearchForm,
+    CountrySearchForm,
+    GenreSearchForm,
+    FilmForm,
+    MovieSearchForm,
+    TopicSearchForm,
 )
 from .models import (
     Customer,
@@ -274,21 +277,32 @@ class MovieDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("films:movie-list")
 
 
-@login_required
-def rate_film(request, film_id):
-    film = get_object_or_404(Film, id=film_id)
-    customer = get_object_or_404(Customer, id=request.user.id)
-    new_rating = int(request.POST.get("rating"))
-    existing_rate = Rate.objects.filter(customer=customer, film=film).first()
+class RateCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Rate
+    fields = ["rating"]
 
-    if existing_rate:
-        existing_rate.rating = new_rating
-        existing_rate.save()
-    else:
-        Rate.objects.create(customer=customer, rating=new_rating, film=film)
+    def form_valid(self, form):
+        film_id = self.kwargs.get('film_id')
+        film = get_object_or_404(Film, id=film_id)
+        customer = self.request.user
+        new_rating = form.cleaned_data['rating']
 
-    return HttpResponseRedirect(reverse_lazy("films:movie-detail",
-                                             args=[film_id]))
+        existing_rate = Rate.objects.filter(
+            customer=self.request.user,
+            film=get_object_or_404(Film,
+                                   id=self.kwargs.get('film_id')),
+        ).first()
+
+        if existing_rate:
+            existing_rate.rating = new_rating
+            existing_rate.save()
+        else:
+            Rate.objects.create(customer=customer,
+                                rating=new_rating,
+                                film=film)
+        return HttpResponseRedirect(
+            reverse_lazy("films:movie-detail",
+                         kwargs={"pk": self.kwargs.get('film_id')}))
 
 
 class CommentaryCreateView(LoginRequiredMixin, generic.CreateView):
@@ -302,7 +316,8 @@ class CommentaryCreateView(LoginRequiredMixin, generic.CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy("films:movie-detail", kwargs={"pk": self.kwargs.get('film_id')})
+        return reverse_lazy("films:movie-detail",
+                            kwargs={"pk": self.kwargs.get('film_id')})
 
 
 class TopicCreateView(LoginRequiredMixin, generic.CreateView):
