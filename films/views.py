@@ -291,18 +291,18 @@ def rate_film(request, film_id):
                                              args=[film_id]))
 
 
-@login_required
-def commentary_film(request, film_id):
-    text = request.POST.get("commentary")
-    if text:
-        Commentary.objects.create(
-            owner=get_object_or_404(Customer, id=request.user.id),
-            movie=get_object_or_404(Film, id=film_id),
-            content=text,
-        )
+class CommentaryCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Commentary
+    fields = ["content"]
 
-    return HttpResponseRedirect(reverse_lazy("films:movie-detail",
-                                             args=[film_id]))
+    def form_valid(self, form):
+        film_id = self.kwargs.get('film_id')
+        form.instance.owner = self.request.user
+        form.instance.movie = get_object_or_404(Film, id=film_id)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("films:movie-detail", kwargs={"pk": self.kwargs.get('film_id')})
 
 
 class TopicCreateView(LoginRequiredMixin, generic.CreateView):
