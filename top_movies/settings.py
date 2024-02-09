@@ -23,13 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = str(os.getenv("SECRET_KEY"))
-
+# SECRET_KEY = str(os.getenv("SECRET_KEY"))
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY",
+                            "django-insecure-6%ee+mbt#e$5wae11618$m4rafqq^@m6-0+_^4twq$32*ro7a-")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "") != "False"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 # Application definition
 
@@ -133,6 +134,8 @@ AUTH_USER_MODEL = "films.Customer"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_REDIRECT_URL = "/"
 
 INTERNAL_IPS = [
     "127.0.0.1",
