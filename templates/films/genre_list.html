@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_filters %}
+{% block title %}<title>Genres</title>
+  <link rel="shortcut icon" type="image/jpg" href="../../static/images/img_7.png"/>{% endblock %}
+{% block content %}
+  <div class="line-gap">
+    <h1>Genres List</h1>
+    <a href="{% url 'films:genre-create' %}" class="btn btn-primary link-to-page">Add Genre</a>
+    <form method="get" action="" class="form-inline  line-gap">
+      {{ search_form|crispy }}
+      <input class="btn btn-secondary" type="submit" value="🔍">
+      <a class="btn btn-info" href="{% url 'films:genre-list' %}">All genres</a>
+    </form>
+  </div>
+  {% if genre_list %}
+    <table class="table">
+      <thead class="thead-dark">
+      <tr>
+        <th>ID</th>
+        <th>Genre</th>
+        <th>Topics</th>
+        <th>Movies</th>
+        <th>Actors</th>
+        <th>Update</th>
+        <th>Delete</th>
+      </tr>
+      </thead>
+      {% for genre in genre_list %}
+        <tr>
+          <td>
+            {{ genre.id }}
+          </td>
+          <td>
+            <a href="../movies/?genre_id={{ genre.id }}">{{ genre.genre }}</a>
+          </td>
+          <td>
+            {% if genre.topic_count > 0 %}
+              <a href="../movies/?genre_id={{ genre.id }}">{{ genre.topic_count }}</a>
+            {% else %}
+              <a href="{% url 'films:topic-create' %}" class="btn btn-primary link-to-page">Add Topic</a>
+            {% endif %}
+          </td>
+          <td>
+            {% if genre.films_genre.count %}
+              <a href="../movies/?genre_id={{ genre.id }}">{{ genre.films_genre.count }}</a>
+            {% else %}
+              <a href="{% url 'films:movie-create' %}" class="btn btn-primary link-to-page">Add Movie</a>
+            {% endif %}
+          </td>
+          <td>
+            {% if genre.actor_count > 0 %}
+              <a href="../movies/?genre_id={{ genre.id }}">{{ genre.actor_count }}</a>
+            {% else %}
+              <a href="{% url 'films:actor-create' %}" class="btn btn-primary link-to-page">Add Actor</a>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'films:genre-update' pk=genre.id %}" class="btn btn-primary link-to-page">
+              Update
+            </a>
+          </td>
+          <td>
+            <a href="{% url 'films:genre-delete' pk=genre.id %}" class="btn btn-danger link-to-page">
+              Delete
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>There are no genres in the service.</p>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+  <h1>( {{ film.film_year }} ) {{ film.film_name }}</h1>
+  <ul>
+    {% for country in film.country.all %}
+      <li><h3>
+        <a href="/movies/?country_id={{ country.id }}">{{ country }}</a>
+      </h3></li>
+    {% endfor %}
+    {% for genre in film.genre.all %}
+      <li><h3>
+        <a href="/movies/?genre_id={{ genre.id }}">{{ genre }}</a>
+      </h3></li>
+    {% endfor %}
+    {% for actor in film.actors.all %}
+      <li><h3>
+        <a href="/movies/?actor_id={{ actor.id }}">{{ actor }}</a>
+      </h3></li>
+    {% endfor %}
+    <li>
+      <h3>Rating / Voters : {{ film.get_average_rate }}</h3>
+      <form method="post" action="{% url 'films:rate-film' film.id %}" class="btn btn-primary link-to-page">
+        {% csrf_token %}
+        <input type="radio" name="rating" value="1"> 1
+        <input type="radio" name="rating" value="2"> 2
+        <input type="radio" name="rating" value="3"> 3
+        <input type="radio" name="rating" value="4"> 4
+        <input type="radio" name="rating" value="5" checked> 5
+        <button type="submit">Rate this Film</button>
+      </form>
+    </li>
+  </ul>
+  <a href="{% url 'films:movie-delete' pk=film.id %}" class="btn btn-danger link-to-page">Delete</a>
+  <a href="{% url 'films:movie-update' pk=film.id %}" class="btn btn-primary link-to-page">Update</a>
+  <a href="{% url 'films:movie-list' %}" class="btn btn-primary link-to-page">All movies</a>
+  <form action="{% url 'films:commentary-film' film.id %}" method="post" novalidate>
+    {% csrf_token %}
+    <label><textarea name="content" class="form-control mt-3" rows="4" id="commentary"
+                     cols="111" placeholder="Write a comment..."></textarea>
+    </label><br>
+    {{ form|crispy }}
+    <input type="submit" value="Submit" class="btn btn-success">
+    <h3 class="d-inline-block ml-3 mb-3">{{ film.film_commentaries.count }} commentaries</h3>
+  </form>
+  <ol>
+    {% for commentary in film.film_commentaries.all %}
+      <li>{{ commentary.owner }} at {{ commentary.created_time }}
+        {{ commentary.content }}<br><br></li>
+    {% endfor %}
+  </ol>
+{% endblock %}

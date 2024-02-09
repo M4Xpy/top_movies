@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Welcome to Movie Top!</h1>
+  <p>The Movie Top has the following record counts:</p>
+  <ul>
+    <li><strong>Voters : </strong>{{ num_customers }}</li>
+    <li><a href="../movies/"><strong>Movies : </strong>{{ num_movies }}</a></li>
+    <li><a href="../actors/"><strong>Actors : </strong>{{ num_actors }}</a></li>
+    <li><a href="../genres/"><strong>Genres : </strong>{{ num_genres }}</a></li>
+    <li><a href="../topics/"><strong>Topics : </strong>{{ num_topics }}</a></li>
+    <li><a href="../countries/"><strong>Countries : </strong>{{ num_countries }}</a></li>
+    <li><strong>Commentaries : </strong>{{ num_commentaries }}</li>
+  </ul>
+  <p>You have visited this page
+    {{ num_visits }} time{{ num_visits|pluralize }}.
+  </p>
+{% endblock %}
