@@ -7,7 +7,7 @@ with ratings and comments
 
 ## Check  it  out !
 
-[Top  movies  project  deployed  to Render](https://top_movies.render.com/)
+[Top  movies  project  deployed  to Render](https://top-movies-28dg.onrender.com/)
 
 ## installation
 
