@@ -132,8 +132,6 @@ STATIC_ROOT = "staticfiles/"
 
 STATICFILES_DIRS = (BASE_DIR / "static",)
 
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
 AUTH_USER_MODEL = "films.Customer"
 
 # Default primary key field type
