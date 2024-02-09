@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -23,7 +24,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = str(os.getenv("SECRET_KEY"))
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY",
                             "django-insecure-6%ee+mbt#e$5wae11618$m4rafqq^@m6-0+_^4twq$32*ro7a-")
 
@@ -89,6 +89,9 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+db_from_env = dj_database_url.config(conn_max_age=500)
+
+DATABASES["default"].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
